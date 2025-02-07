@@ -1,14 +1,17 @@
 import { Route, Routes, Outlet } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import Option1 from "./pages/Option1";
-import Option2 from "./pages/Option2";
+import Home from "./pages/Home";
+import Rechercher from "./pages/Rechercher";
+import Creer from "./pages/Creer";
+import MesParties from "./pages/MesParties";
+import Profil from "./pages/Profil";
 import Login from "./pages/Login";
 
 function Layout() {
   return (
-    <div className="relative h-screen w-screen bg-cover bg-center bg-no-repeat" style={{ backgroundImage: "url('/background.jpg')" }}>
+    <div className="relative h-screen w-screen bg-cover bg-center bg-no-repeat overflow-hidden" style={{ backgroundImage: "url('/background.jpg')" }}>
       <Navbar />
-      <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white">
+      <div className="absolute inset-0 flex flex-col overflow-y-scroll snap-y snap-mandatory">
         <Outlet />
       </div>
     </div>
@@ -19,9 +22,11 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
-        <Route index element={<h1 className='text-4xl font-bold'>Bienvenue sur PaddelMate</h1>} />
-        <Route path="option1" element={<Option1 />} />
-        <Route path="option2" element={<Option2 />} />
+        <Route index element={<Home />} />
+        <Route path="rechercher" element={<Rechercher />} />
+        <Route path="creer" element={<Creer />} />
+        <Route path="mes-parties" element={<MesParties />} />
+        <Route path="profil" element={<Profil />} />
         <Route path="login" element={<Login />} />
       </Route>
     </Routes>

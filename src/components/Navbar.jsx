@@ -7,11 +7,17 @@ export default function Navbar() {
         PaddelMate
       </Link>
       <div className="flex space-x-6">
-        <Link to="/option1" className="text-white hover:text-gray-400 transition duration-300">
-          Option 1
+        <Link to="/rechercher" className="text-white hover:text-gray-400 transition duration-300">
+          Rechercher
         </Link>
-        <Link to="/option2" className="text-white hover:text-gray-400 transition duration-300">
-          Option 2
+        <Link to="/creer" className="text-white hover:text-gray-400 transition duration-300">
+          Créer une partie
+        </Link>
+        <Link to="/mes-parties" className="text-white hover:text-gray-400 transition duration-300">
+          Mes parties
+        </Link>
+        <Link to="/profil" className="text-white hover:text-gray-400 transition duration-300">
+          Profil
         </Link>
         <Link to="/login" className="text-white hover:text-gray-400 transition duration-300">
           Login

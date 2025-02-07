@@ -1,0 +1,19 @@
+html, body {
+  overflow: hidden; /* Empêche tout scrolling global */
+  height: 100%;
+  width: 100%;
+}
+
+.scroll-container {
+  height: 100vh;
+  width: 100vw;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+}
+
+.scroll-section {
+  height: 100vh;
+  width: 100%;
+  scroll-snap-align: start;
+}

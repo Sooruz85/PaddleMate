@@ -1,7 +1,7 @@
-export default function MesParties() {
+export default function Rechercher() {
   return (
     <div className="h-screen flex justify-center items-center text-3xl">
-      Mes parties réservées
+      Rechercher une partie de padel
     </div>
   );
 }
