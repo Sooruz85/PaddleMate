@@ -20,14 +20,14 @@ export default function Home() {
       {/* Section 3 : Créer une partie */}
       <section id="section3" className="scroll-section flex flex-col justify-center items-center bg-transparent text-white">
         <h2 className="text-3xl font-bold">Créer une partie</h2>
-        <p className="mt-4 text-lg">Créez votre propre partie et invitez d'autres joueurs à vous rejoindre.</p>
+        <p className="mt-4 text-lg">Créez votre propre partie et invitez d&apos;autres joueurs à vous rejoindre.</p>
         <a href="#section4" className="mt-6 text-white text-3xl animate-bounce">⬇</a>
       </section>
 
       {/* Section 4 : Contact */}
       <section id="section4" className="scroll-section flex flex-col justify-center items-center bg-transparent text-white">
         <h2 className="text-3xl font-bold">Nous contacter</h2>
-        <p className="mt-4 text-lg">Besoin d'aide ? Contactez-nous à <a href="mailto:contact@padelmate.com" className="underline">contact@padelmate.com</a>.</p>
+        <p className="mt-4 text-lg">Besoin d&apos;aide ? Contactez-nous à <a href="mailto:contact@padelmate.com" className="underline">contact@padelmate.com</a>.</p>
       </section>
     </div>
   );
