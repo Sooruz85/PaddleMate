@@ -25,10 +25,57 @@ export default function Home() {
       </section>
 
       {/* Section 4 : Contact */}
-      <section id="section4" className="scroll-section flex flex-col justify-center items-center bg-transparent text-white">
-        <h2 className="text-3xl font-bold">Nous contacter</h2>
-        <p className="mt-4 text-lg">Besoin d&apos;aide ? Contactez-nous à <a href="mailto:contact@padelmate.com" className="underline">contact@padelmate.com</a>.</p>
-      </section>
+
+<section id="section4" className="h-screen flex flex-col justify-center items-center bg-gray-700 text-white snap-center">
+  <h2 className="text-3xl font-bold mb-4">Nous contacter</h2>
+  <p className="mb-6 text-lg">Besoin d&apos;aide ? Contactez-nous en remplissant ce formulaire.</p>
+
+  <form className="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-lg">
+    <div className="mb-4">
+      <label className="block text-white text-sm font-bold mb-2" htmlFor="name">
+        Nom
+      </label>
+      <input
+        id="name"
+        type="text"
+        className="w-full px-4 py-2 rounded bg-gray-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+        placeholder="Votre nom"
+      />
+    </div>
+
+    <div className="mb-4">
+      <label className="block text-white text-sm font-bold mb-2" htmlFor="email">
+        Email
+      </label>
+      <input
+        id="email"
+        type="email"
+        className="w-full px-4 py-2 rounded bg-gray-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+        placeholder="Votre email"
+      />
+    </div>
+
+    <div className="mb-4">
+      <label className="block text-white text-sm font-bold mb-2" htmlFor="message">
+        Message
+      </label>
+      <textarea
+        id="message"
+        className="w-full px-4 py-2 rounded bg-gray-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+        rows="4"
+        placeholder="Votre message..."
+      ></textarea>
+    </div>
+
+    <button
+      type="submit"
+      className="w-full bg-blue-500 text-white font-bold py-2 rounded hover:bg-blue-600 transition duration-300"
+    >
+      Envoyer
+    </button>
+  </form>
+</section>
+
     </div>
   );
 }
