@@ -22,7 +22,7 @@ export default function Rechercher() {
   return (
     <div className="h-screen flex flex-col justify-center items-center bg-transparent">
       <div className="bg-white/10 backdrop-blur-lg p-8 rounded-lg shadow-lg border border-white/20 max-w-2xl w-full text-center">
-        <h2 className="text-3xl font-bold text-white mb-6">Rechercher une partie de Padel</h2>
+        <h2 className="text-3xl font-bold text-white mb-6">Rechercher une partie de Paddel</h2>
 
         <form onSubmit={handleSearch} className="space-y-4">
           {/* Niveau du joueur */}

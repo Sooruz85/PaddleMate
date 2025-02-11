@@ -6,6 +6,8 @@ import Creer from "./pages/Creer";
 import MesParties from "./pages/MesParties";
 import Profil from "./pages/Profil";
 import Login from "./pages/Login";
+import "./styles/global.css";
+
 
 function Layout() {
   return (
