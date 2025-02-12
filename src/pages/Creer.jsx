@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useAnnonces } from "../context/AnnonceContext";
+import { useNavigate } from "react-router-dom";
 
 export default function ReservationPadel() {
   const [club, setClub] = useState("");
@@ -7,19 +9,42 @@ export default function ReservationPadel() {
   const [players, setPlayers] = useState(2);
   const [level, setLevel] = useState("1");
   const [contact, setContact] = useState("");
+  const { ajouterAnnonce } = useAnnonces();
+  const navigate = useNavigate();
+
+  const handleSubmit = async () => {
+    if (!club || !date || !time || !contact) {
+      alert("Veuillez remplir tous les champs !");
+      return;
+    }
+
+    const nouvelleAnnonce = {
+      club,
+      date,
+      time,
+      players,
+      level,
+      contact,
+      image: "/background-padel.jpg", // Remplace par une image dynamique plus tard
+      createdAt: new Date(),
+    };
+
+    await ajouterAnnonce(nouvelleAnnonce);
+    navigate("/trouver"); // Redirection après validation
+  };
 
   return (
     <div className="h-screen w-full flex justify-center items-center bg-cover bg-center"
       style={{ backgroundImage: "url('/background.jpg')" }}>
 
-      <div className="backdrop-blur-lg bg-white bg-opacity-10 shadow-lg rounded-lg flex max-w-4xl w-full">
+      <div className="mt-10 backdrop-blur-lg bg-white bg-opacity-10 shadow-lg rounded-lg flex max-w-4xl w-full">
 
         {/* Image à gauche */}
         <div className="w-1/2">
           <img
             src="/background-padel.jpg"
             alt="Padel Match"
-            className="w-full h-full object-cover rounded-l-lg"
+            className="p-[26px] w-full h-full object-cover rounded-l-lg"
           />
         </div>
 
@@ -94,7 +119,7 @@ export default function ReservationPadel() {
           />
 
           {/* Bouton de validation */}
-          <button className="w-full bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600 transition">
+          <button onClick={handleSubmit} className="w-full bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600 transition">
             Créer
           </button>
 
