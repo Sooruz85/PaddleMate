@@ -1,10 +1,10 @@
 import { Route, Routes, Outlet } from "react-router-dom";
-import { AnnonceProvider } from "./context/AnnonceContext"; // Contexte des annonces
+import { AnnonceProvider } from "./context/AnnonceContext"; // Assure-toi que le contexte est bien là
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Rechercher from "./pages/Rechercher";
 import Creer from "./pages/Creer";
-import MesParties from "./pages/MesParties";
+import Trouver from "./pages/Trouver";  // ✅ Ajoute cette ligne
 import Profil from "./pages/Profil";
 import Login from "./pages/Login";
 import "./styles/global.css";
@@ -29,7 +29,7 @@ export default function App() {
           <Route index element={<Home />} />
           <Route path="rechercher" element={<Rechercher />} />
           <Route path="creer" element={<Creer />} />
-          <Route path="mes-parties" element={<MesParties />} />
+          <Route path="trouver" element={<Trouver />} />  {/* ✅ Assure-toi que cette route est bien là */}
           <Route path="profil" element={<Profil />} />
           <Route path="login" element={<Login />} />
         </Route>

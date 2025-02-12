@@ -14,7 +14,7 @@ export default function Navbar() {
         <Link to="/creer" className="text-white hover:text-gray-400 transition duration-300">
           Créer une partie
         </Link>
-        <Link to="/mes-parties" className="text-white hover:text-gray-400 transition duration-300">
+        <Link to="/trouver" className="text-white hover:text-gray-400 transition duration-300">
           Trouver une partie
         </Link>
         <Link to="/profil" className="text-white hover:text-gray-400 transition duration-300">
