@@ -1,24 +1,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
 
-
-
 /* Ajout de Tailwind */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 html, body {
-  overflow: hidden; /* Empêche tout scrolling global */
   height: 100%;
   width: 100%;
+  overflow-x: hidden; /* Empêche le défilement horizontal */
+  font-family: 'Playfair Display', serif;
+  background-color: #f8f9fa; /* Fond gris clair */
 }
 
 .scroll-container {
   height: 100vh;
   width: 100vw;
-  overflow-y: scroll;
+  overflow-y: auto;
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
+  padding: 10px;
 }
 
 .scroll-section {
@@ -27,29 +28,37 @@ html, body {
   scroll-snap-align: start;
 }
 
-.custom-font {
-  font-family: 'Playfair Display', serif;
+/* Style global pour les inputs et selects */
+input, select {
+  border-radius: 8px;
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  background-color: white;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
 }
 
-/* Améliorer l'apparence du calendrier */
-.custom-datepicker {
-  z-index: 1000 !important;
+input:focus, select:focus {
+  border-color: #1E3A8A;
+  box-shadow: 0px 4px 8px rgba(30, 58, 138, 0.3);
+  outline: none;
 }
 
+/* Amélioration du DatePicker */
 .react-datepicker {
   border-radius: 12px;
   border: none;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .react-datepicker__header {
-  background-color: #1E3A8A; /* Bleu foncé */
+  background-color: #1E3A8A;
   color: white;
   border-radius: 12px 12px 0 0;
 }
 
 .react-datepicker__day--selected {
-  background-color: #FBBF24 !important; /* Jaune accent */
+  background-color: #FBBF24 !important;
   color: black !important;
   border-radius: 8px;
 }
@@ -64,7 +73,7 @@ html, body {
 }
 
 .react-datepicker__time-box {
-  background: #f8f9fa;
+  background: #258bde;
   border-radius: 12px;
   padding: 10px;
 }
@@ -72,9 +81,56 @@ html, body {
 .react-datepicker__time-list-item {
   padding: 8px;
   border-radius: 8px;
+  transition: background 0.2s ease-in-out;
+}
+
+.react-datepicker__time-list-item:hover {
+  background: rgba(30, 58, 138, 0.2);
 }
 
 .react-datepicker__time-list-item--selected {
-  background: #9333EA !important; /* Violet */
+  background: #9333EA !important;
   color: white !important;
+}
+
+/* Style de la barre de recherche */
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  max-width: 1200px;
+  width: 100%;
+  padding: 12px 20px;
+  background: white;
+  border-radius: 50px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.search-input {
+  flex: 1;
+  text-align: center;
+  font-weight: bold;
+  border-radius: 8px;
+  padding: 10px;
+  transition: all 0.2s ease-in-out;
+}
+
+.search-input:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Style du bouton de recherche */
+.search-button {
+  background: linear-gradient(135deg, #E02424, #B91C1C);
+  color: white;
+  padding: 12px 14px;
+  border-radius: 50%;
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease-in-out;
+}
+
+.search-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0px 5px 12px rgba(0, 0, 0, 0.3);
 }

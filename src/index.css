@@ -12,9 +12,6 @@
 
 }
 
-
-
-
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -83,51 +80,4 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 
-}
-/* Améliorer l'apparence du calendrier */
-.custom-datepicker {
-  z-index: 1000 !important;
-}
-
-.react-datepicker {
-  border-radius: 12px;
-  border: none;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-.react-datepicker__header {
-  background-color: #1E3A8A; /* Bleu foncé */
-  color: white;
-  border-radius: 12px 12px 0 0;
-}
-
-.react-datepicker__day--selected {
-  background-color: #FBBF24 !important; /* Jaune accent */
-  color: black !important;
-  border-radius: 8px;
-}
-
-.react-datepicker__day--today {
-  font-weight: bold;
-  color: #1E3A8A;
-}
-
-.react-datepicker__time-container {
-  border-radius: 12px;
-}
-
-.react-datepicker__time-box {
-  background: #f8f9fa;
-  border-radius: 12px;
-  padding: 10px;
-}
-
-.react-datepicker__time-list-item {
-  padding: 8px;
-  border-radius: 8px;
-}
-
-.react-datepicker__time-list-item--selected {
-  background: #9333EA !important; /* Violet */
-  color: white !important;
 }
