@@ -1,10 +1,9 @@
 import { Route, Routes, Outlet } from "react-router-dom";
-import { AnnonceProvider } from "./context/AnnonceContext"; // Assure-toi que le contexte est bien là
+import { AnnonceProvider } from "./context/AnnonceContext"; // Contexte des annonces
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
-import Rechercher from "./pages/Rechercher";
+import Rechercher from "./pages/Rechercher"; // ✅ La nouvelle page complète
 import Creer from "./pages/Creer";
-import Trouver from "./pages/Trouver";  // ✅ Ajoute cette ligne
 import Profil from "./pages/Profil";
 import Login from "./pages/Login";
 import "./styles/global.css";
@@ -23,13 +22,12 @@ function Layout() {
 
 export default function App() {
   return (
-    <AnnonceProvider> {/* ✅ Contexte des annonces */}
+    <AnnonceProvider> {/* ✅ Fournit le contexte des annonces */}
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
-          <Route path="rechercher" element={<Rechercher />} />
+          <Route path="rechercher" element={<Rechercher />} /> {/* ✅ Nouvelle page fusionnée */}
           <Route path="creer" element={<Creer />} />
-          <Route path="trouver" element={<Trouver />} />  {/* ✅ Assure-toi que cette route est bien là */}
           <Route path="profil" element={<Profil />} />
           <Route path="login" element={<Login />} />
         </Route>

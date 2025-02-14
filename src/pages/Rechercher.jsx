@@ -1,105 +1,120 @@
 import { useState } from "react";
+import { useAnnonces } from "../context/AnnonceContext";
+
+const clubs = [
+  { name: "Club Paris", image: "/images/club-paris.jpg" },
+  { name: "Club Bordeaux", image: "/images/club-bordeaux.jpg" },
+  { name: "Club Marseille", image: "/images/club-marseille.jpg" },
+  { name: "Club Lyon", image: "/images/club-lyon.jpg" },
+  { name: "Club Toulouse", image: "/images/club-toulouse.jpg" },
+  { name: "Club Lille", image: "/images/club-lille.jpg" },
+  { name: "Club Nantes", image: "/images/club-nantes.jpg" },
+  { name: "Club Nice", image: "/images/club-nice.jpg" },
+  { name: "Club Strasbourg", image: "/images/club-strasbourg.jpg" },
+  { name: "Club Montpellier", image: "/images/club-montpellier.jpg" },
+];
 
 export default function Rechercher() {
-  const [level, setLevel] = useState("");
+  const { annonces } = useAnnonces();
+
+  // États du formulaire de recherche
+  const [selectedClub, setSelectedClub] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
-  const [location, setLocation] = useState("");
-  const [radius, setRadius] = useState(10); // Par défaut 10 km
+  const [players, setPlayers] = useState("");
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    console.log({
-      level,
-      date,
-      time,
-      location,
-      radius,
-    });
-    alert("Recherche envoyée !");
-  };
+  // Filtrage des annonces selon la recherche
+  const filteredAnnonces = annonces.filter((annonce) => {
+    return (
+      (!selectedClub || annonce.club === selectedClub) &&
+      (!date || annonce.date === date) &&
+      (!time || annonce.time === time) &&
+      (!players || annonce.players.toString() === players)
+    );
+  });
 
   return (
-    <div className="h-screen flex flex-col justify-center items-center bg-transparent">
-      <div className="bg-white/10 backdrop-blur-lg p-8 rounded-lg shadow-lg border border-white/20 max-w-2xl w-full text-center">
-        <h2 className="text-3xl font-bold text-white mb-6">Rechercher une partie de Paddel</h2>
+    <div className="min-h-screen bg-cover bg-center bg-no-repeat p-10 mt-16" style={{ backgroundImage: "url('/images/background.jpg')" }}
+>
+      {/* Barre de recherche */}
+      <div className="bg-white flex items-center rounded-full shadow-lg px-4 py-2 max-w-3xl mx-auto mb-10">
+        {/* Club */}
+        <select
+          className="flex-1 p-2 text-gray-900 font-semibold bg-transparent outline-none"
+          value={selectedClub}
+          onChange={(e) => setSelectedClub(e.target.value)}
+        >
+          <option value="">N'importe où</option>
+          {clubs.map((club) => (
+            <option key={club.name} value={club.name}>
+              {club.name}
+            </option>
+          ))}
+        </select>
 
-        <form onSubmit={handleSearch} className="space-y-4">
-          {/* Niveau du joueur */}
-          <div>
-            <label className="block text-white text-sm font-bold mb-2">Niveau du joueur</label>
-            <select
-              className="w-full p-2 rounded bg-gray-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={level}
-              onChange={(e) => setLevel(e.target.value)}
-              required
-            >
-              <option value="">Sélectionnez un niveau</option>
-              <option value="debutant">Débutant</option>
-              <option value="intermediaire">Intermédiaire</option>
-              <option value="avance">Avancé</option>
-              <option value="expert">Expert</option>
-            </select>
-          </div>
+        <span className="text-gray-400">|</span>
 
-          {/* Créneau horaire */}
-          <div>
-            <label className="block text-white text-sm font-bold mb-2">Date et heure</label>
-            <div className="flex space-x-2">
-              <input
-                type="date"
-                className="w-1/2 p-2 rounded bg-gray-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                required
-              />
-              <input
-                type="time"
-                className="w-1/2 p-2 rounded bg-gray-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={time}
-                onChange={(e) => setTime(e.target.value)}
-                required
-              />
-            </div>
-          </div>
+        {/* Date */}
+        <input
+          type="date"
+          className="flex-1 p-2 bg-transparent text-gray-900 font-semibold outline-none"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+        />
 
-          {/* Localisation */}
-          <div>
-            <label className="block text-white text-sm font-bold mb-2">Localité</label>
-            <input
-              type="text"
-              className="w-full p-2 rounded bg-gray-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Ville, adresse..."
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              required
-            />
-          </div>
+        <span className="text-gray-400">|</span>
 
-          {/* Rayon de recherche */}
-          <div>
-            <label className="block text-white text-sm font-bold mb-2">Rayon de recherche (km)</label>
-            <input
-              type="range"
-              min="1"
-              max="50"
-              step="1"
-              className="w-full"
-              value={radius}
-              onChange={(e) => setRadius(e.target.value)}
-            />
-            <p className="text-white text-sm mt-2">Distance : {radius} km</p>
-          </div>
+        {/* Heure */}
+        <input
+          type="time"
+          className="flex-1 p-2 bg-transparent text-gray-900 font-semibold outline-none"
+          value={time}
+          onChange={(e) => setTime(e.target.value)}
+        />
 
-          {/* Bouton de recherche */}
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white font-bold py-2 rounded hover:bg-blue-600 transition duration-300"
-          >
-            Rechercher
-          </button>
-        </form>
+        <span className="text-gray-400">|</span>
+
+        {/* Joueurs */}
+        <select
+          className="flex-1 p-2 text-gray-900 font-semibold bg-transparent outline-none"
+          value={players}
+          onChange={(e) => setPlayers(e.target.value)}
+        >
+          <option value="">Ajouter des joueurs</option>
+          <option value="2">2 joueurs</option>
+          <option value="3">3 joueurs</option>
+          <option value="4">4 joueurs</option>
+        </select>
+
+        {/* Bouton recherche */}
+        <button className="bg-red-500 text-white p-3 rounded-full ml-2 hover:bg-red-600 transition">
+          🔍
+        </button>
       </div>
+
+      {/* Liste des annonces filtrées */}
+      {filteredAnnonces.length === 0 ? (
+        <p className="text-white text-center bg-black bg-opacity-50 py-2 rounded-md">
+          Aucune partie trouvée.
+        </p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredAnnonces.map((annonce) => (
+            <div key={annonce.id} className="bg-white bg-opacity-90 rounded-lg shadow-lg overflow-hidden">
+              <img src={annonce.image} alt={annonce.club} className="w-full h-64 object-cover" />
+              <div className="p-6 text-center">
+                <p className="text-orange-500 font-semibold text-sm mb-2">NEW</p>
+                <h2 className="text-xl font-bold text-gray-900">{annonce.club}</h2>
+                <p className="text-blue-700 font-semibold text-sm mt-2">{annonce.players} joueurs</p>
+                <p className="text-gray-600 mt-2">{annonce.date} à {annonce.time}</p>
+                <button className="mt-4 px-6 py-3 border-2 border-blue-700 text-blue-700 font-semibold rounded-full hover:bg-blue-700 hover:text-white transition">
+                  Réserver
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
