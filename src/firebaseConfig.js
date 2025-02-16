@@ -17,3 +17,4 @@ const db = getFirestore(app);
 const auth = getAuth(app); // ✅ Initialisation d'Auth
 
 export { db, auth };
+
