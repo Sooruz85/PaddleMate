@@ -1,19 +1,19 @@
 import React, { useState } from "react";
-import { useAuth } from "../context/AuthContext"; // ✅ Import du contexte
+import { useAuth } from "../context/AuthContext"; // ✅ Vérifie que c'est bien importé
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
-  const { login } = useAuth(); // ✅ Utilisation du contexte
-  const navigate = useNavigate(); // ✅ Redirection après connexion
+  const { login } = useAuth(); // ✅ Assure-toi que `useAuth()` fonctionne ici
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       await login(email, password);
-      navigate("/profil"); // ✅ Redirection vers la page profil après connexion
+      navigate("/"); // ✅ Redirige vers la Home après connexion
     } catch (err) {
       setError("Email ou mot de passe incorrect.");
     }
@@ -58,13 +58,6 @@ const Login = () => {
             Se connecter
           </button>
         </form>
-
-        <p className="text-sm text-gray-600 text-center mt-4">
-          Pas encore de compte ?{" "}
-          <a href="/signup" className="text-blue-500 hover:underline">
-            Inscrivez-vous
-          </a>
-        </p>
       </div>
     </div>
   );

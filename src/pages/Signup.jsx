@@ -1,21 +1,21 @@
 import React, { useState } from "react";
-import { useAuth } from "../context/AuthContext"; // ✅ Import du contexte
+import { useAuth } from "../context/AuthContext"; // ✅ Vérifie que c'est bien importé
 import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
-  const { signup } = useAuth(); // ✅ Utilisation de `signup` du contexte
-  const navigate = useNavigate(); // ✅ Redirection après inscription
+  const { signup } = useAuth();
+  const navigate = useNavigate();
 
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
       await signup(email, password);
-      navigate("/profil"); // ✅ Redirige l'utilisateur vers son profil après inscription
+      navigate("/"); // ✅ Redirige vers Home après inscription
     } catch (err) {
-      setError("Une erreur est survenue. Vérifiez vos informations.");
+      setError("Erreur lors de l'inscription.");
     }
   };
 
@@ -58,13 +58,6 @@ const Signup = () => {
             S'inscrire
           </button>
         </form>
-
-        <p className="text-sm text-gray-600 text-center mt-4">
-          Déjà un compte ?{" "}
-          <a href="/login" className="text-blue-500 hover:underline">
-            Connectez-vous
-          </a>
-        </p>
       </div>
     </div>
   );
