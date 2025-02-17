@@ -11,6 +11,12 @@ const clubs = [
   { name: "Club Bordeaux", image: "/images/club-bordeaux.jpg" },
   { name: "Club Marseille", image: "/images/club-marseille.jpg" },
   { name: "Club Lyon", image: "/images/club-lyon.jpg" },
+  { name: "Club Toulouse", image: "/images/club-toulouse.jpg" },
+  { name: "Club Lille", image: "/images/club-lille.jpg" },
+  { name: "Club Nantes", image: "/images/club-nantes.jpg" },
+  { name: "Club Nice", image: "/images/club-nice.jpg" },
+  { name: "Club Strasbourg", image: "/images/club-strasbourg.jpg" },
+  { name: "Club Montpellier", image: "/images/club-montpellier.jpg" },
 ];
 
 export default function Rechercher() {
@@ -19,17 +25,10 @@ export default function Rechercher() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
   const [players, setPlayers] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
+  const [selectedAnnonce, setSelectedAnnonce] = useState(null);
 
-  // ✅ Fonction de réservation avec pop-up
-  const handleReserve = (annonce) => {
-    const confirmReservation = window.confirm(`Voulez-vous réserver la partie au ${annonce.club} ?`);
-    if (confirmReservation) {
-      addReservation(annonce);
-      alert("Votre réservation a été enregistrée !");
-    }
-  };
-
-  // ✅ Filtrage des annonces selon la recherche
+  // ✅ Filtrer les annonces selon les critères de recherche
   const filteredAnnonces = annonces.filter((annonce) => {
     return (
       (!selectedClub || annonce.club === selectedClub) &&
@@ -39,13 +38,90 @@ export default function Rechercher() {
     );
   });
 
+  // ✅ Gérer la réservation
+  const handleReservation = (annonce) => {
+    setSelectedAnnonce(annonce);
+    setShowPopup(true);
+  };
+
+  // ✅ Confirmer la réservation et ajouter à la liste
+  const confirmReservation = () => {
+    if (selectedAnnonce) {
+      addReservation(selectedAnnonce);
+    }
+    setShowPopup(false);
+  };
+
   return (
     <div className="min-h-screen bg-cover bg-center bg-no-repeat p-10 mt-16"
       style={{ backgroundImage: "url('/images/background.jpg')" }}>
 
-      <h2 className="text-3xl text-white text-center font-bold mb-6">Rechercher une Partie</h2>
+      {/* ✅ Barre de recherche */}
+      <div className="bg-white flex items-center rounded-full shadow-lg px-6 py-2 max-w-[750px] mx-auto mb-10 space-x-4">
+        {/* Club */}
+        <select
+          className="w-[180px] min-w-[180px] text-center p-2 text-gray-900 font-semibold bg-transparent outline-none hover:bg-gray-100 transition rounded-lg hover:scale-105"
+          value={selectedClub}
+          onChange={(e) => setSelectedClub(e.target.value)}
+        >
+          <option value="">N'importe où</option>
+          {clubs.map((club) => (
+            <option key={club.name} value={club.name}>
+              {club.name}
+            </option>
+          ))}
+        </select>
 
-      {/* Liste des annonces filtrées */}
+        <span className="text-gray-400">|</span>
+
+        {/* Date */}
+        <div className="relative flex items-center space-x-2 w-[140px]">
+          <FaCalendarAlt className="text-red-500" />
+          <DatePicker
+            selected={selectedDate}
+            onChange={(date) => setSelectedDate(date)}
+            dateFormat="dd/MM/yyyy"
+            locale={fr}
+            className="w-full text-center text-gray-900 font-semibold bg-transparent outline-none rounded-lg hover:bg-gray-100 transition hover:scale-105"
+            placeholderText="Date"
+          />
+        </div>
+
+        <span className="text-gray-400">|</span>
+
+        {/* Heure */}
+        <div className="relative flex items-center space-x-2 w-[140px]">
+          <FaClock className="text-blue-500" />
+          <DatePicker
+            selected={selectedTime}
+            onChange={(time) => setSelectedTime(time)}
+            showTimeSelect
+            showTimeSelectOnly
+            timeFormat="HH:mm"
+            timeIntervals={30}
+            dateFormat="HH:mm"
+            locale={fr}
+            className="w-full text-center text-gray-900 font-semibold bg-transparent outline-none rounded-lg hover:bg-gray-100 transition hover:scale-105"
+            placeholderText="Heure"
+          />
+        </div>
+
+        <span className="text-gray-400">|</span>
+
+        {/* Joueurs */}
+        <select
+          className="w-[140px] min-w-[140px] text-center p-2 text-gray-900 font-semibold bg-transparent outline-none hover:bg-gray-100 transition rounded-lg hover:scale-105"
+          value={players}
+          onChange={(e) => setPlayers(e.target.value)}
+        >
+          <option value="">Joueurs</option>
+          <option value="1">1 joueur</option>
+          <option value="2">2 joueurs</option>
+          <option value="3">3 joueurs</option>
+        </select>
+      </div>
+
+      {/* ✅ Liste des annonces filtrées */}
       {filteredAnnonces.length === 0 ? (
         <p className="text-white text-center bg-black bg-opacity-50 py-2 rounded-md">
           Aucune partie trouvée.
@@ -57,17 +133,33 @@ export default function Rechercher() {
               <img src={annonce.image} alt={annonce.club} className="w-full h-64 object-cover" />
               <div className="p-6 text-center">
                 <h2 className="text-xl font-bold text-gray-900">{annonce.club}</h2>
-                <p className="text-blue-700 font-semibold">{annonce.players} joueurs</p>
-                <p className="text-gray-600">{format(parseISO(annonce.date), "dd/MM/yyyy")} à {annonce.time}</p>
+                <p className="text-blue-700 font-semibold text-sm mt-2">{annonce.players} joueurs</p>
+                <p className="text-gray-600 mt-2">{format(parseISO(annonce.date), "dd/MM/yyyy")} à {annonce.time}</p>
                 <button
-                  onClick={() => handleReserve(annonce)}
-                  className="mt-4 px-6 py-3 border-2 border-blue-700 text-blue-700 font-semibold rounded-full hover:bg-blue-700 hover:text-white transition"
+                  onClick={() => handleReservation(annonce)}
+                  className="mt-4 px-6 py-3 bg-blue-600 text-white font-semibold rounded-full hover:bg-blue-700 transition"
                 >
                   Réserver
                 </button>
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* ✅ Pop-up de confirmation */}
+      {showPopup && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Réservation confirmée 🎉</h2>
+            <p className="text-gray-700">Votre partie a bien été réservée !</p>
+            <button
+              onClick={confirmReservation}
+              className="mt-4 px-6 py-3 bg-green-600 text-white font-semibold rounded-full hover:bg-green-700 transition"
+            >
+              OK
+            </button>
+          </div>
         </div>
       )}
     </div>

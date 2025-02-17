@@ -19,7 +19,7 @@ const clubs = [
 ];
 
 export default function Creer() {
-  const { annonces, ajouterAnnonce } = useAnnonces();
+  const { annonces, addAnnonce } = useAnnonces(); // ✅ Correction du hook
 
   // États pour le formulaire
   const [selectedClub, setSelectedClub] = useState("");
@@ -28,9 +28,9 @@ export default function Creer() {
   const [players, setPlayers] = useState("");
 
   // ✅ Fonction pour ajouter une annonce
-  const handleCreate = () => {
+  const handleCreate = async () => {
     if (!selectedClub || !selectedDate || !selectedTime || !players) {
-      alert("Veuillez remplir tous les champs !");
+      alert("❌ Veuillez remplir tous les champs !");
       return;
     }
 
@@ -42,7 +42,12 @@ export default function Creer() {
       image: clubs.find((c) => c.name === selectedClub)?.image || "/images/default.jpg",
     };
 
-    ajouterAnnonce(nouvelleAnnonce);
+    await addAnnonce(nouvelleAnnonce); // ✅ Ajout à Firestore et mise à jour locale
+
+    console.log("✅ Partie créée :", nouvelleAnnonce);
+
+    // ✅ Afficher une alerte de confirmation
+    alert("✅ Partie créée avec succès !");
 
     // ✅ Réinitialiser le formulaire après création
     setSelectedClub("");
