@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import Rechercher from "./pages/Rechercher";
 import Creer from "./pages/Creer";
 import Profil from "./pages/Profil";
+import MesParties from "./pages/MesParties"; // ✅ Nouvelle page "Mes Parties"
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import "./styles/global.css";
@@ -19,7 +20,7 @@ function LoadingScreen() {
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
 
-  if (loading) return <LoadingScreen />; // ✅ Afficher un écran de chargement pendant la vérification
+  if (loading) return <LoadingScreen />; // ✅ Affiche un écran de chargement si l'état d'auth est en attente
   return user ? children : <Navigate to="/login" />;
 }
 
@@ -39,8 +40,8 @@ function Layout() {
 // ✅ Structure de l'application avec AuthProvider & AnnonceProvider
 export default function App() {
   return (
-    <AuthProvider> {/* Fournit le contexte d'authentification */}
-      <AnnonceProvider> {/* Fournit le contexte des annonces */}
+    <AuthProvider> {/* ✅ Fournit le contexte d'authentification */}
+      <AnnonceProvider> {/* ✅ Fournit le contexte des annonces */}
         <Routes>
           <Route path="/" element={<Layout />}>
             {/* 🔹 Routes publiques */}
@@ -49,9 +50,10 @@ export default function App() {
             <Route path="signup" element={<Signup />} />
             <Route path="login" element={<Login />} />
 
-            {/* 🔹 Route protégée : uniquement accessibles si connecté */}
+            {/* 🔹 Routes protégées : accessibles uniquement si connecté */}
             <Route path="creer" element={<PrivateRoute><Creer /></PrivateRoute>} />
             <Route path="profil" element={<PrivateRoute><Profil /></PrivateRoute>} />
+            <Route path="mes-parties" element={<PrivateRoute><MesParties /></PrivateRoute>} /> {/* ✅ Ajout de MesParties */}
           </Route>
         </Routes>
       </AnnonceProvider>

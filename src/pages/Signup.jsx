@@ -55,7 +55,7 @@ const Signup = () => {
             type="submit"
             className="w-full bg-blue-600 text-white py-3 rounded-md font-medium hover:bg-blue-700 transition"
           >
-            S'inscrire
+            S&apos;inscrire
           </button>
         </form>
       </div>

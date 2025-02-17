@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext"; // ✅ Vérifie que c'est bien importé
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom"; // ✅ Ajout de Link pour rediriger vers l'inscription
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -58,6 +58,14 @@ const Login = () => {
             Se connecter
           </button>
         </form>
+
+        {/* ✅ Lien vers la page d'inscription */}
+        <p className="text-sm text-gray-600 text-center mt-4">
+          Pas encore de compte ?{" "}
+          <Link to="/signup" className="text-blue-500 hover:underline">
+            Inscrivez-vous ici
+          </Link>
+        </p>
       </div>
     </div>
   );

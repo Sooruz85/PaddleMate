@@ -18,30 +18,44 @@ const clubs = [
   { name: "Club Montpellier", image: "/images/club-montpellier.jpg" },
 ];
 
-export default function Rechercher() {
-  const { annonces } = useAnnonces();
+export default function Creer() {
+  const { annonces, ajouterAnnonce } = useAnnonces();
 
-  // États du formulaire de recherche
+  // États pour le formulaire
   const [selectedClub, setSelectedClub] = useState("");
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
   const [players, setPlayers] = useState("");
 
-  // Filtrage des annonces selon la recherche
-  const filteredAnnonces = annonces.filter((annonce) => {
-    return (
-      (!selectedClub || annonce.club === selectedClub) &&
-      (!selectedDate || format(annonce.date, "dd/MM/yyyy") === format(selectedDate, "dd/MM/yyyy")) &&
-      (!selectedTime || annonce.time === format(selectedTime, "HH:mm")) &&
-      (!players || annonce.players.toString() === players)
-    );
-  });
+  // ✅ Fonction pour ajouter une annonce
+  const handleCreate = () => {
+    if (!selectedClub || !selectedDate || !selectedTime || !players) {
+      alert("Veuillez remplir tous les champs !");
+      return;
+    }
+
+    const nouvelleAnnonce = {
+      club: selectedClub,
+      date: selectedDate.toISOString(),
+      time: format(selectedTime, "HH:mm"),
+      players: players,
+      image: clubs.find((c) => c.name === selectedClub)?.image || "/images/default.jpg",
+    };
+
+    ajouterAnnonce(nouvelleAnnonce);
+
+    // ✅ Réinitialiser le formulaire après création
+    setSelectedClub("");
+    setSelectedDate(null);
+    setSelectedTime(null);
+    setPlayers("");
+  };
 
   return (
     <div className="min-h-screen bg-cover bg-center bg-no-repeat p-10 mt-16"
       style={{ backgroundImage: "url('/images/background.jpg')" }}>
 
-      {/* Barre de recherche ajustée */}
+      {/* Formulaire de création */}
       <div className="bg-white flex items-center rounded-full shadow-lg px-6 py-3 max-w-5xl mx-auto mb-10 w-full space-x-3">
 
         {/* Club */}
@@ -50,7 +64,7 @@ export default function Rechercher() {
           value={selectedClub}
           onChange={(e) => setSelectedClub(e.target.value)}
         >
-          <option value="">N'importe où</option>
+          <option value="">Sélectionnez un club</option>
           {clubs.map((club) => (
             <option key={club.name} value={club.name}>
               {club.name}
@@ -67,7 +81,7 @@ export default function Rechercher() {
           dateFormat="dd/MM/yyyy"
           locale={fr}
           className="text-center text-gray-900 font-semibold bg-transparent outline-none rounded-lg w-40 p-3 hover:bg-gray-100 transition"
-          placeholderText="📅 Date"
+          placeholderText=" Date"
         />
 
         <span className="text-gray-400">|</span>
@@ -83,7 +97,7 @@ export default function Rechercher() {
           dateFormat="HH:mm"
           locale={fr}
           className="text-center text-gray-900 font-semibold bg-transparent outline-none rounded-lg w-40 p-3 hover:bg-gray-100 transition"
-          placeholderText="⏰ Heure"
+          placeholderText=" Heure"
         />
 
         <span className="text-gray-400">|</span>
@@ -100,35 +114,25 @@ export default function Rechercher() {
           <option value="3">3 joueurs</option>
         </select>
 
-        {/* Bouton recherche */}
-        <button className="bg-red-500 text-white p-3 rounded-full ml-2 hover:bg-red-600 transition hover:scale-105">
-          🔍
+        {/* ✅ Bouton Créer */}
+        <button onClick={handleCreate} className="bg-green-500 text-white p-3 rounded-full ml-2 hover:bg-green-600 transition hover:scale-105">
+          Créer
         </button>
       </div>
 
-      {/* Liste des annonces filtrées */}
-      {filteredAnnonces.length === 0 ? (
-        <p className="text-white text-center bg-black bg-opacity-50 py-2 rounded-md">
-          Aucune partie trouvée.
-        </p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredAnnonces.map((annonce) => (
-            <div key={annonce.id} className="bg-white bg-opacity-90 rounded-lg shadow-lg overflow-hidden">
-              <img src={annonce.image} alt={annonce.club} className="w-full h-64 object-cover" />
-              <div className="p-6 text-center">
-                <p className="text-orange-500 font-semibold text-sm mb-2">NEW</p>
-                <h2 className="text-xl font-bold text-gray-900">{annonce.club}</h2>
-                <p className="text-blue-700 font-semibold text-sm mt-2">{annonce.players} joueurs</p>
-                <p className="text-gray-600 mt-2">{format(annonce.date, "dd/MM/yyyy")} à {annonce.time}</p>
-                <button className="mt-4 px-6 py-3 border-2 border-blue-700 text-blue-700 font-semibold rounded-full hover:bg-blue-700 hover:text-white transition">
-                  Réserver
-                </button>
-              </div>
+      {/* ✅ Affichage des parties créées */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {annonces.map((annonce) => (
+          <div key={annonce.id} className="bg-white bg-opacity-90 rounded-lg shadow-lg overflow-hidden">
+            <img src={annonce.image} alt={annonce.club} className="w-full h-64 object-cover" />
+            <div className="p-6 text-center">
+              <h2 className="text-xl font-bold text-gray-900">{annonce.club}</h2>
+              <p className="text-blue-700 font-semibold">{annonce.players} joueurs</p>
+              <p className="text-gray-600">{format(new Date(annonce.date), "dd/MM/yyyy")} à {annonce.time}</p>
             </div>
-          ))}
-        </div>
-      )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
