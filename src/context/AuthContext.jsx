@@ -42,4 +42,3 @@ export function useAuth() {
 
 // ✅ Export du contexte
 export { AuthContext };
-

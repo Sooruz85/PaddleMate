@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { db } from "../firebaseConfig";
-import { collection, addDoc, getDocs, updateDoc, doc } from "firebase/firestore";
+import { collection, addDoc, getDocs, updateDoc, doc, deleteDoc } from "firebase/firestore";
 
 const AnnonceContext = createContext();
 
@@ -33,7 +33,6 @@ export const AnnonceProvider = ({ children }) => {
       const docRef = await addDoc(collection(db, "annonces"), nouvelleAnnonce);
       const newAnnonce = { id: docRef.id, ...nouvelleAnnonce };
 
-      // ✅ Mise à jour immédiate de l'état local (sans attendre Firestore)
       setAnnonces((prevAnnonces) => [...prevAnnonces, newAnnonce]);
 
       console.log("✅ Partie créée avec succès :", newAnnonce);
@@ -81,7 +80,6 @@ export const AnnonceProvider = ({ children }) => {
       const docRef = await addDoc(collection(db, "reservations"), annonce);
       const newReservation = { id: docRef.id, ...annonce };
 
-      // ✅ Mise à jour immédiate de l'état local
       setReservations((prevReservations) => [...prevReservations, newReservation]);
 
       console.log("✅ Réservation ajoutée :", newReservation);
@@ -90,8 +88,23 @@ export const AnnonceProvider = ({ children }) => {
     }
   };
 
+  // ✅ Supprimer une réservation dans Firestore et l'état local
+  const deleteReservation = async (id) => {
+    try {
+      await deleteDoc(doc(db, "reservations", id));
+
+      setReservations((prevReservations) =>
+        prevReservations.filter((reservation) => reservation.id !== id)
+      );
+
+      console.log(`✅ Réservation ${id} supprimée avec succès.`);
+    } catch (error) {
+      console.error(`❌ Erreur lors de la suppression de la réservation ${id} :`, error);
+    }
+  };
+
   return (
-    <AnnonceContext.Provider value={{ annonces, addAnnonce, updateAnnonce, reservations, addReservation }}>
+    <AnnonceContext.Provider value={{ annonces, addAnnonce, updateAnnonce, reservations, addReservation, deleteReservation }}>
       {children}
     </AnnonceContext.Provider>
   );
