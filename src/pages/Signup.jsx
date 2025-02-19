@@ -3,6 +3,7 @@ import { useAuth } from "../context/AuthContext"; // ✅ Vérifie que c'est bien
 import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
+  const [username, setUsername] = useState(""); // ✅ Ajout du pseudo
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -12,7 +13,7 @@ const Signup = () => {
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      await signup(email, password);
+      await signup(email, password, username); // ✅ Ajoute le pseudo à la fonction signup
       navigate("/"); // ✅ Redirige vers Home après inscription
     } catch (err) {
       setError("Erreur lors de l'inscription.");
@@ -27,6 +28,18 @@ const Signup = () => {
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
         <form onSubmit={handleSignup} className="space-y-4">
+          <div>
+            <label className="block text-gray-600 text-sm font-medium">Pseudo</label>
+            <input
+              type="text"
+              placeholder="Entrez votre pseudo"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
           <div>
             <label className="block text-gray-600 text-sm font-medium">Email</label>
             <input
