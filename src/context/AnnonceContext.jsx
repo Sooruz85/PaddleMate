@@ -2,12 +2,14 @@ import { createContext, useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { db } from "../firebaseConfig";
 import { collection, addDoc, getDocs, updateDoc, doc, deleteDoc } from "firebase/firestore";
+import { useAuth } from "./AuthContext"; // ✅ Import du contexte d'authentification
 
 const AnnonceContext = createContext();
 
 export const AnnonceProvider = ({ children }) => {
   const [annonces, setAnnonces] = useState([]); // ✅ Stocke les parties créées
   const [reservations, setReservations] = useState([]); // ✅ Stocke les parties réservées
+  const { user } = useAuth(); // ✅ Récupère l'utilisateur connecté
 
   // ✅ Charger les parties créées depuis Firestore au montage
   useEffect(() => {
@@ -27,15 +29,20 @@ export const AnnonceProvider = ({ children }) => {
     fetchAnnonces();
   }, []);
 
-  // ✅ Ajouter une nouvelle annonce dans Firestore et mettre à jour l'état local
+  // ✅ Ajouter une nouvelle annonce dans Firestore et inclure le pseudo de l'utilisateur
   const addAnnonce = async (nouvelleAnnonce) => {
     try {
-      const docRef = await addDoc(collection(db, "annonces"), nouvelleAnnonce);
-      const newAnnonce = { id: docRef.id, ...nouvelleAnnonce };
+      const annonceAvecPseudo = {
+        ...nouvelleAnnonce,
+        username: user?.displayName || "Utilisateur inconnu", // ✅ Ajout du pseudo ici
+      };
+
+      const docRef = await addDoc(collection(db, "annonces"), annonceAvecPseudo);
+      const newAnnonce = { id: docRef.id, ...annonceAvecPseudo };
 
       setAnnonces((prevAnnonces) => [...prevAnnonces, newAnnonce]);
 
-      console.log("✅ Partie créée avec succès :", newAnnonce);
+      console.log("✅ Partie créée avec succès avec pseudo :", newAnnonce);
     } catch (error) {
       console.error("❌ Erreur lors de l'ajout d'une annonce :", error);
     }
@@ -104,7 +111,9 @@ export const AnnonceProvider = ({ children }) => {
   };
 
   return (
-    <AnnonceContext.Provider value={{ annonces, addAnnonce, updateAnnonce, reservations, addReservation, deleteReservation }}>
+    <AnnonceContext.Provider
+      value={{ annonces, addAnnonce, updateAnnonce, reservations, addReservation, deleteReservation }}
+    >
       {children}
     </AnnonceContext.Provider>
   );
