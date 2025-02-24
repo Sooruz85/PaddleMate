@@ -69,7 +69,9 @@ export default function Rechercher() {
               <div className="p-6 text-center">
                 <h2 className="text-xl font-bold text-gray-900">{annonce.club}</h2>
                 <p className="text-blue-700 font-semibold text-sm mt-2">{annonce.players} joueurs</p>
-                <p className="text-gray-600 mt-2">{format(parseISO(annonce.date), "dd/MM/yyyy")} à {annonce.time}</p>
+                <p className="text-gray-600 mt-2">
+  {annonce.date ? format(parseISO(annonce.date), "dd/MM/yyyy") : "Date inconnue"} à {annonce.time || "Heure inconnue"}
+</p>
                 <p className="text-gray-500 italic mt-2">
                   Créé par : {annonce.username || "Utilisateur inconnu"}
                 </p>
