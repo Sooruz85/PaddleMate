@@ -38,7 +38,7 @@ export default function Rechercher() {
     );
   });
 
-  // ✅ Gérer la réservation
+  // ✅ Gérer la réservation et afficher le pop-up de confirmation
   const handleReservation = (annonce) => {
     setSelectedAnnonce(annonce);
     setShowPopup(true);
@@ -56,71 +56,6 @@ export default function Rechercher() {
     <div className="min-h-screen bg-cover bg-center bg-no-repeat p-10 mt-16"
       style={{ backgroundImage: "url('/images/background.jpg')" }}>
 
-      {/* ✅ Barre de recherche */}
-      <div className="bg-white flex items-center rounded-full shadow-lg px-6 py-2 max-w-[750px] mx-auto mb-10 space-x-4">
-        {/* Club */}
-        <select
-          className="w-[180px] min-w-[180px] text-center p-2 text-gray-900 font-semibold bg-transparent outline-none hover:bg-gray-100 transition rounded-lg hover:scale-105"
-          value={selectedClub}
-          onChange={(e) => setSelectedClub(e.target.value)}
-        >
-          <option value="">N'importe où</option>
-          {clubs.map((club) => (
-            <option key={club.name} value={club.name}>
-              {club.name}
-            </option>
-          ))}
-        </select>
-
-        <span className="text-gray-400">|</span>
-
-        {/* Date */}
-        <div className="relative flex items-center space-x-2 w-[140px]">
-          <FaCalendarAlt className="text-red-500" />
-          <DatePicker
-            selected={selectedDate}
-            onChange={(date) => setSelectedDate(date)}
-            dateFormat="dd/MM/yyyy"
-            locale={fr}
-            className="w-full text-center text-gray-900 font-semibold bg-transparent outline-none rounded-lg hover:bg-gray-100 transition hover:scale-105"
-            placeholderText="Date"
-          />
-        </div>
-
-        <span className="text-gray-400">|</span>
-
-        {/* Heure */}
-        <div className="relative flex items-center space-x-2 w-[140px]">
-          <FaClock className="text-blue-500" />
-          <DatePicker
-            selected={selectedTime}
-            onChange={(time) => setSelectedTime(time)}
-            showTimeSelect
-            showTimeSelectOnly
-            timeFormat="HH:mm"
-            timeIntervals={30}
-            dateFormat="HH:mm"
-            locale={fr}
-            className="w-full text-center text-gray-900 font-semibold bg-transparent outline-none rounded-lg hover:bg-gray-100 transition hover:scale-105"
-            placeholderText="Heure"
-          />
-        </div>
-
-        <span className="text-gray-400">|</span>
-
-        {/* Joueurs */}
-        <select
-          className="w-[140px] min-w-[140px] text-center p-2 text-gray-900 font-semibold bg-transparent outline-none hover:bg-gray-100 transition rounded-lg hover:scale-105"
-          value={players}
-          onChange={(e) => setPlayers(e.target.value)}
-        >
-          <option value="">Joueurs</option>
-          <option value="1">1 joueur</option>
-          <option value="2">2 joueurs</option>
-          <option value="3">3 joueurs</option>
-        </select>
-      </div>
-
       {/* ✅ Liste des annonces filtrées */}
       {filteredAnnonces.length === 0 ? (
         <p className="text-white text-center bg-black bg-opacity-50 py-2 rounded-md">
@@ -135,6 +70,9 @@ export default function Rechercher() {
                 <h2 className="text-xl font-bold text-gray-900">{annonce.club}</h2>
                 <p className="text-blue-700 font-semibold text-sm mt-2">{annonce.players} joueurs</p>
                 <p className="text-gray-600 mt-2">{format(parseISO(annonce.date), "dd/MM/yyyy")} à {annonce.time}</p>
+                <p className="text-gray-500 italic mt-2">
+                  Créé par : {annonce.username || "Utilisateur inconnu"}
+                </p>
                 <button
                   onClick={() => handleReservation(annonce)}
                   className="mt-4 px-6 py-3 bg-blue-600 text-white font-semibold rounded-full hover:bg-blue-700 transition"
@@ -149,16 +87,32 @@ export default function Rechercher() {
 
       {/* ✅ Pop-up de confirmation */}
       {showPopup && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Réservation confirmée 🎉</h2>
-            <p className="text-gray-700">Votre partie a bien été réservée !</p>
-            <button
-              onClick={confirmReservation}
-              className="mt-4 px-6 py-3 bg-green-600 text-white font-semibold rounded-full hover:bg-green-700 transition"
-            >
-              OK
-            </button>
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Confirmer la réservation</h2>
+            <p className="text-gray-700 mb-4">
+              Voulez-vous réserver la partie à <strong>{selectedAnnonce?.club}</strong> ?
+            </p>
+            <p className="text-gray-600">
+              <strong>Date :</strong> {selectedAnnonce?.date} à {selectedAnnonce?.time}
+            </p>
+            <p className="text-gray-600">
+              <strong>Créateur :</strong> {selectedAnnonce?.username || "Utilisateur inconnu"}
+            </p>
+            <div className="flex justify-center space-x-4 mt-6">
+              <button
+                onClick={() => setShowPopup(false)}
+                className="px-6 py-2 bg-gray-500 text-white font-semibold rounded-full hover:bg-gray-600 transition"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={confirmReservation}
+                className="px-6 py-2 bg-green-600 text-white font-semibold rounded-full hover:bg-green-700 transition"
+              >
+                Confirmer
+              </button>
+            </div>
           </div>
         </div>
       )}

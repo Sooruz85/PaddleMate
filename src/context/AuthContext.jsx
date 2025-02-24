@@ -9,10 +9,9 @@ import {
 } from "firebase/auth";
 import PropTypes from "prop-types";
 
-// ✅ Création du contexte
+// ✅ Création du contexte d'authentification
 const AuthContext = createContext();
 
-// ✅ Fournisseur du contexte d'authentification
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -26,31 +25,54 @@ export function AuthProvider({ children }) {
     return () => unsubscribe();
   }, []);
 
-  // ✅ Fonction d'inscription avec email, mot de passe et pseudo
+  // ✅ Fonction d'inscription avec pseudo (displayName)
   const signup = async (email, password, username) => {
     try {
       const { user } = await createUserWithEmailAndPassword(auth, email, password);
 
-      // ✅ Mettre à jour le profil utilisateur Firebase avec le pseudo
-      await updateProfile(user, {
-        displayName: username,
-      });
+      if (user) {
+        await updateProfile(user, {
+          displayName: username, // ✅ Définit le pseudo dans Firebase
+        });
 
-      // ✅ Mettre à jour l'état local pour inclure le pseudo
-      setUser({ ...user, displayName: username });
+        // ✅ Forcer la mise à jour de l'utilisateur avec auth.currentUser.reload()
+        await auth.currentUser.reload();
+        const updatedUser = auth.currentUser;
+        setUser(updatedUser);
 
-      console.log("Utilisateur créé avec succès :", user);
+        console.log("✅ Pseudo enregistré :", updatedUser.displayName);
+      }
     } catch (error) {
-      console.error("Erreur lors de l'inscription :", error);
+      console.error("❌ Erreur lors de l'inscription :", error.message);
       throw error; // ✅ Propager l'erreur pour la gestion dans Signup.jsx
     }
   };
 
-  // ✅ Connexion utilisateur
-  const login = (email, password) => signInWithEmailAndPassword(auth, email, password);
+  // ✅ Connexion utilisateur avec mise à jour du contexte
+  const login = async (email, password) => {
+    try {
+      const { user } = await signInWithEmailAndPassword(auth, email, password);
+
+      await auth.currentUser.reload(); // ✅ Assure que le displayName est chargé
+      const updatedUser = auth.currentUser;
+      setUser(updatedUser);
+
+      console.log("✅ Connexion réussie :", updatedUser.displayName || updatedUser.email);
+    } catch (error) {
+      console.error("❌ Erreur lors de la connexion :", error.message);
+    }
+  };
 
   // ✅ Déconnexion utilisateur
-  const logout = () => signOut(auth);
+  const logout = async () => {
+    try {
+      await signOut(auth);
+      setUser(null);
+      console.log("✅ Déconnexion réussie");
+    } catch (error) {
+      console.error("❌ Erreur lors de la déconnexion :", error.message);
+    }
+  };
 
   return (
     <AuthContext.Provider value={{ user, signup, login, logout }}>
@@ -68,5 +90,4 @@ export function useAuth() {
   return useContext(AuthContext);
 }
 
-// ✅ Export du contexte
 export { AuthContext };
