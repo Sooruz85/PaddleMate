@@ -25,8 +25,6 @@ export default function Rechercher() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
   const [players, setPlayers] = useState("");
-  const [showPopup, setShowPopup] = useState(false);
-  const [selectedAnnonce, setSelectedAnnonce] = useState(null);
 
   // ✅ Filtrer les annonces selon les critères de recherche
   const filteredAnnonces = annonces.filter((annonce) => {
@@ -38,86 +36,77 @@ export default function Rechercher() {
     );
   });
 
-  // ✅ Gérer la réservation et afficher le pop-up de confirmation
-  const handleReservation = (annonce) => {
-    setSelectedAnnonce(annonce);
-    setShowPopup(true);
-  };
-
-  // ✅ Confirmer la réservation et ajouter à la liste
-  const confirmReservation = () => {
-    if (selectedAnnonce) {
-      addReservation(selectedAnnonce);
-    }
-    setShowPopup(false);
-  };
-
   return (
     <div className="min-h-screen bg-cover bg-center bg-no-repeat p-10 mt-16"
       style={{ backgroundImage: "url('/images/background.jpg')" }}>
 
-      {/* ✅ Liste des annonces filtrées */}
-      {filteredAnnonces.length === 0 ? (
-        <p className="text-white text-center bg-black bg-opacity-50 py-2 rounded-md">
-          Aucune partie trouvée.
-        </p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredAnnonces.map((annonce) => (
-            <div key={annonce.id} className="bg-white bg-opacity-90 rounded-lg shadow-lg overflow-hidden">
-              <img src={annonce.image} alt={annonce.club} className="w-full h-64 object-cover" />
-              <div className="p-6 text-center">
-                <h2 className="text-xl font-bold text-gray-900">{annonce.club}</h2>
-                <p className="text-blue-700 font-semibold text-sm mt-2">{annonce.players} joueurs</p>
-                <p className="text-gray-600 mt-2">
-  {annonce.date ? format(parseISO(annonce.date), "dd/MM/yyyy") : "Date inconnue"} à {annonce.time || "Heure inconnue"}
-</p>
-                <p className="text-gray-500 italic mt-2">
-                  Créé par : {annonce.username || "Utilisateur inconnu"}
-                </p>
-                <button
-                  onClick={() => handleReservation(annonce)}
-                  className="mt-4 px-6 py-3 bg-blue-600 text-white font-semibold rounded-full hover:bg-blue-700 transition"
-                >
-                  Réserver
-                </button>
-              </div>
-            </div>
+      {/* ✅ Barre de recherche */}
+      <div className="bg-white flex items-center rounded-full shadow-lg px-6 py-3 max-w-5xl mx-auto mb-10 w-full space-x-3">
+        <select
+          className="flex-1 text-center p-3 text-gray-900 font-semibold bg-transparent outline-none hover:bg-gray-100 transition rounded-lg w-40"
+          value={selectedClub}
+          onChange={(e) => setSelectedClub(e.target.value)}
+        >
+          <option value="">Sélectionnez un club</option>
+          {clubs.map((club) => (
+            <option key={club.name} value={club.name}>
+              {club.name}
+            </option>
           ))}
-        </div>
-      )}
+        </select>
 
-      {/* ✅ Pop-up de confirmation */}
-      {showPopup && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Confirmer la réservation</h2>
-            <p className="text-gray-700 mb-4">
-              Voulez-vous réserver la partie à <strong>{selectedAnnonce?.club}</strong> ?
-            </p>
-            <p className="text-gray-600">
-              <strong>Date :</strong> {selectedAnnonce?.date} à {selectedAnnonce?.time}
-            </p>
-            <p className="text-gray-600">
-              <strong>Créateur :</strong> {selectedAnnonce?.username || "Utilisateur inconnu"}
-            </p>
-            <div className="flex justify-center space-x-4 mt-6">
-              <button
-                onClick={() => setShowPopup(false)}
-                className="px-6 py-2 bg-gray-500 text-white font-semibold rounded-full hover:bg-gray-600 transition"
-              >
-                Annuler
-              </button>
-              <button
-                onClick={confirmReservation}
-                className="px-6 py-2 bg-green-600 text-white font-semibold rounded-full hover:bg-green-700 transition"
-              >
-                Confirmer
-              </button>
+        <DatePicker
+          selected={selectedDate}
+          onChange={(date) => setSelectedDate(date)}
+          dateFormat="dd/MM/yyyy"
+          locale={fr}
+          className="text-center text-gray-900 font-semibold bg-transparent outline-none rounded-lg w-40 p-3 hover:bg-gray-100 transition"
+          placeholderText="Date"
+        />
+
+        <DatePicker
+          selected={selectedTime}
+          onChange={(time) => setSelectedTime(time)}
+          showTimeSelect
+          showTimeSelectOnly
+          timeFormat="HH:mm"
+          timeIntervals={30}
+          dateFormat="HH:mm"
+          locale={fr}
+          className="text-center text-gray-900 font-semibold bg-transparent outline-none rounded-lg w-40 p-3 hover:bg-gray-100 transition"
+          placeholderText="Heure"
+        />
+
+        <select
+          className="flex-1 text-center p-3 text-gray-900 font-semibold bg-transparent outline-none hover:bg-gray-100 transition rounded-lg w-40"
+          value={players}
+          onChange={(e) => setPlayers(e.target.value)}
+        >
+          <option value="">Joueurs</option>
+          <option value="1">1 joueur</option>
+          <option value="2">2 joueurs</option>
+          <option value="3">3 joueurs</option>
+        </select>
+      </div>
+
+      {/* ✅ Afficher toutes les annonces (filtrées) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredAnnonces.map((annonce) => (
+          <div key={annonce.id} className="bg-white bg-opacity-90 rounded-lg shadow-lg overflow-hidden">
+            <img src={annonce.image} alt={annonce.club} className="w-full h-64 object-cover" />
+            <div className="p-6 text-center">
+              <h2 className="text-xl font-bold text-gray-900">{annonce.club}</h2>
+              <p className="text-blue-700 font-semibold text-sm mt-2">{annonce.players} joueurs</p>
+              <p className="text-gray-600 mt-2">
+                {annonce.date ? format(parseISO(annonce.date), "dd/MM/yyyy") : "Date inconnue"} à {annonce.time || "Heure inconnue"}
+              </p>
+              <p className="text-gray-500 italic mt-2">
+                Créé par : {annonce.username || "Utilisateur inconnu"}
+              </p>
             </div>
           </div>
-        </div>
-      )}
+        ))}
+      </div>
     </div>
   );
 }
