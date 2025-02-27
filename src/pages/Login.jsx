@@ -12,12 +12,14 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      await login(email, password);
-      navigate("/"); // ✅ Redirige vers la Home après connexion
+        await login(email, password);
+        navigate("/"); // ✅ Redirige vers la Home après connexion
     } catch (err) {
-      setError("Email ou mot de passe incorrect.");
+        console.error("Erreur lors de la connexion :", err);
+        setError("Email ou mot de passe incorrect.");
     }
-  };
+};
+
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">

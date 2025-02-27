@@ -16,9 +16,10 @@ export default function MesParties() {
   const [updatedTime, setUpdatedTime] = useState("");
   const [updatedPlayers, setUpdatedPlayers] = useState("");
 
-  // États pour la confirmation d'annulation
+  // États pour la confirmation de suppression
   const [confirmDelete, setConfirmDelete] = useState(false);
-  const [selectedReservationId, setSelectedReservationId] = useState(null);
+  const [selectedDeleteId, setSelectedDeleteId] = useState(null);
+
 
   // Ouvrir la modal avec les valeurs actuelles
   const handleEdit = (annonce) => {
@@ -46,18 +47,18 @@ export default function MesParties() {
 
   // Ouvrir la confirmation de suppression
   const handleDeleteClick = (id) => {
-    setSelectedReservationId(id);
+    setSelectedDeleteId(id);
     setConfirmDelete(true);
-  };
+};
 
   // Confirmer la suppression
-  const confirmDeleteReservation = () => {
-    if (selectedReservationId) {
-      deleteReservation(selectedReservationId);
-      setConfirmDelete(false);
-      setSelectedReservationId(null);
+  const confirmDeleteAnnonce = async () => {
+    if (selectedDeleteId) {
+        await deleteReservation(selectedDeleteId);
+        setConfirmDelete(false);
+        setSelectedDeleteId(null);
     }
-  };
+};
 
   return (
     <div className="min-h-screen bg-cover bg-center bg-no-repeat p-10 mt-16"
@@ -109,7 +110,39 @@ export default function MesParties() {
                   >
                     <FiEdit className="mr-2" /> Modifier
                   </button>
-                </div>
+
+                  <button
+    onClick={() => handleDeleteClick(annonce.id)}
+    className="mt-3 px-4 py-2 bg-red-500 text-white font-semibold rounded-md hover:bg-red-600 transition flex items-center justify-center mx-auto"
+>
+    <FiTrash2 className="mr-2" /> Supprimer
+</button>
+                   {/* Pop-up confirmation suppression */}
+      {confirmDelete && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-80 text-center">
+            <p className="text-gray-800 mb-4 font-semibold">Confirmer la suppression ?</p>
+            <div className="flex justify-between">
+              <button
+                onClick={() => setConfirmDelete(false)}
+                className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition"
+              >
+                Annuler
+              </button>
+              <button
+    onClick={confirmDeleteAnnonce}
+    className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
+>
+    Supprimer
+</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+              </div>
+
+
               ))}
             </div>
           )}

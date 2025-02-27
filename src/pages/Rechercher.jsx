@@ -4,7 +4,6 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { format, parseISO } from "date-fns";
 import fr from "date-fns/locale/fr";
-import { FaCalendarAlt, FaClock } from "react-icons/fa";
 
 const clubs = [
   { name: "Club Paris", image: "/images/club-paris.jpg" },
@@ -25,8 +24,8 @@ export default function Rechercher() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
   const [players, setPlayers] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
 
-  // ✅ Filtrer les annonces selon les critères de recherche
   const filteredAnnonces = annonces.filter((annonce) => {
     return (
       (!selectedClub || annonce.club === selectedClub) &&
@@ -36,9 +35,25 @@ export default function Rechercher() {
     );
   });
 
+  const handleReservation = (id) => {
+    addReservation(id);
+    setShowPopup(true);
+    setTimeout(() => {
+      setShowPopup(false);
+    }, 3000);
+  };
+
   return (
     <div className="min-h-screen bg-cover bg-center bg-no-repeat p-10 mt-16"
       style={{ backgroundImage: "url('/images/background.jpg')" }}>
+
+      <h2 className="text-3xl text-white text-center font-bold mb-6">Rechercher des Parties</h2>
+
+      {showPopup && (
+        <div className="fixed top-20 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-md shadow-lg z-50">
+          Réservation réussie !
+        </div>
+      )}
 
       {/* ✅ Barre de recherche */}
       <div className="bg-white flex items-center rounded-full shadow-lg px-6 py-3 max-w-5xl mx-auto mb-10 w-full space-x-3">
@@ -89,7 +104,6 @@ export default function Rechercher() {
         </select>
       </div>
 
-      {/* ✅ Afficher toutes les annonces (filtrées) */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredAnnonces.map((annonce) => (
           <div key={annonce.id} className="bg-white bg-opacity-90 rounded-lg shadow-lg overflow-hidden">
@@ -103,6 +117,12 @@ export default function Rechercher() {
               <p className="text-gray-500 italic mt-2">
                 Créé par : {annonce.username || "Utilisateur inconnu"}
               </p>
+              <button
+                onClick={() => handleReservation(annonce.id)}
+                className="mt-4 px-6 py-2 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600 transition"
+              >
+                Réserver
+              </button>
             </div>
           </div>
         ))}
