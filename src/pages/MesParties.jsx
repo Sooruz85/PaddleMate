@@ -5,9 +5,12 @@ import { useNavigate } from "react-router-dom";
 import { FiEdit, FiTrash2 } from "react-icons/fi"; // ✅ Icônes d'édition et suppression
 
 export default function MesParties() {
-  const { annonces, reservations, updateAnnonce, deleteReservation } = useAnnonces();
+  const { annonces, reservations: initialReservations, updateAnnonce, deleteReservation } = useAnnonces();
   const [affichage, setAffichage] = useState("creees");
   const navigate = useNavigate();
+
+  // États locaux pour les annonces et réservations
+  const [reservations, setReservations] = useState(initialReservations);
 
   // États pour la modification
   const [modalOpen, setModalOpen] = useState(false);
@@ -19,8 +22,6 @@ export default function MesParties() {
   // États pour la confirmation de suppression
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [selectedDeleteId, setSelectedDeleteId] = useState(null);
-
-
   // Ouvrir la modal avec les valeurs actuelles
   const handleEdit = (annonce) => {
     setSelectedAnnonce(annonce);
@@ -54,11 +55,57 @@ export default function MesParties() {
   // Confirmer la suppression
   const confirmDeleteAnnonce = async () => {
     if (selectedDeleteId) {
-        await deleteReservation(selectedDeleteId);
-        setConfirmDelete(false);
-        setSelectedDeleteId(null);
+        try {
+            const response = await deleteReservationAPI(selectedDeleteId); // Utilise la fonction renommée
+
+            if (response.ok) {
+                console.log("Annonce supprimée côté serveur :", selectedDeleteId);
+
+                // Mettre à jour l'état local pour supprimer la card de l'affichage
+                const updatedAnnonces = annonces.filter(
+                    (annonce) => annonce.id !== selectedDeleteId
+                );
+
+                setConfirmDelete(false);
+                setSelectedDeleteId(null);
+                setAffichage("creees");
+
+                // Met à jour les annonces localement pour forcer le re-rendu
+                setAnnonces(updatedAnnonces);
+            } else {
+                console.error("Erreur lors de la suppression : ", response.statusText);
+            }
+        } catch (error) {
+            console.error("Erreur lors de la suppression de l'annonce :", error);
+        }
     }
 };
+
+
+
+
+// Exemple de fonction de suppression côté serveur avec fetc
+const deleteReservationAPI = async (reservationId) => {
+  try {
+      const response = await fetch(`/api/reservations/${reservationId}`, {
+          method: 'DELETE',
+      });
+
+      if (!response.ok) {
+          throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+      }
+
+      console.log("Réservation supprimée avec succès !");
+      return response;
+  } catch (error) {
+      console.error("Erreur lors de la suppression de la réservation :", error);
+      throw error;
+  }
+};
+
+
+
+
 
   return (
     <div className="min-h-screen bg-cover bg-center bg-no-repeat p-10 mt-16"
